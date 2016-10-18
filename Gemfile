@@ -1,4 +1,4 @@
-source "http://rubygems.org"
+source "https://rubygems.org"
 
-# Specify your gem's dependencies in chef-jabber-snitch.gemspec
+# Specify your gem's dependencies in chef-xmpp-handler.gemspec
 gemspec
