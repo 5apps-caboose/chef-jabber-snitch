@@ -14,10 +14,6 @@ class ChefXmppHandler < Chef::Handler
     @timestamp = Time.now.getutc
   end
 
-  def formatted_run_list
-    node.run_list.map {|r| r.type == :role ? r.name : r.to_s }.join(', ')
-  end
-
   def report
     Chef::Log.error("Chef run failed @ #{@timestamp}, snitchin' to chefs via Jabber")
 
@@ -29,15 +25,8 @@ class ChefXmppHandler < Chef::Handler
 
         conference = ::Jabber::MUC::SimpleMUCClient.new(client)
         conference.join("#{@xmpp_room}/Chef")
-
-        message = [
-          "Chef run failed on #{node.name} (#{formatted_run_list})",
-          "Error: #{run_status.formatted_exception}",
-          "Backtrace:"
-        ]
-        message += Array(backtrace)[0..4]
-
-        conference.say(message.join("\n"))
+        message = "Chef run failed on #{node.name}. Error: #{run_status.formatted_exception}"
+        conference.say(message)
 
         Chef::Log.info("Informed chefs via XMPP '#{message}'")
       end
